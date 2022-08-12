@@ -4,7 +4,9 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
+	"github.com/eggmoid/mattermost-chatbot/command"
 	"github.com/eggmoid/mattermost-chatbot/config"
+	"github.com/eggmoid/mattermost-chatbot/util"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 	"github.com/pkg/errors"
@@ -30,6 +32,11 @@ func (p *Plugin) OnActivate() error {
 
 	if err := p.OnConfigurationChange(); err != nil {
 		return err
+	}
+
+	cmds := command.GetCommands(p.API)
+	for _, cmd := range cmds {
+		p.API.RegisterCommand(cmd)
 	}
 
 	return nil
@@ -70,6 +77,17 @@ func (p *Plugin) setUpBotUser() error {
 
 	config.BotUserID = botUserID
 	return nil
+}
+
+func (p *Plugin) ExecuteCommand(context *plugin.Context, commandArgs *model.CommandArgs) (*model.CommandResponse, *model.AppError) {
+	args, argErr := util.SplitArgs(commandArgs.Command)
+	if argErr != nil {
+		return &model.CommandResponse{
+			ResponseType: model.COMMAND_RESPONSE_TYPE_EPHEMERAL,
+			Text:         argErr.Error(),
+		}, nil
+	}
+	return command.CommandHandler.Handle(commandArgs, args...), nil
 }
 
 func main() {

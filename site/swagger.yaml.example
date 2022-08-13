@@ -1,0 +1,9 @@
+nuuu: # 서비스코드
+  category: # 구분
+  part: # 파트
+  name: # 서비스명
+  links:
+    d: SM개발 Swagger URL
+    t: SM통시 Swagger URL
+    sd: SI개발 Swagger URL
+    st: SI통시 Swagger URL

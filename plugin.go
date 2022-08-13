@@ -10,6 +10,7 @@ import (
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -46,6 +47,18 @@ func (p *Plugin) OnConfigurationChange() error {
 	if config.Mattermost == nil {
 		return nil
 	}
+
+	bundlePath, err := p.API.GetBundlePath()
+	if err != nil {
+		return err
+	}
+
+	swaggerFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "swagger.yaml"))
+	if err != nil {
+		return err
+	}
+
+	yaml.Unmarshal(swaggerFile, &config.Swagger)
 
 	return nil
 }

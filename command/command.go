@@ -29,13 +29,24 @@ const (
 )
 
 var CommandHandler = Handler{
-	handlers: map[string]HandlerFunc{
+	handlers: mergeMaps(map[string]HandlerFunc{
 		"/bot/list": listCommand,
 		"/bot/app":  appCommand,
 		"/bot/env":  envCommand,
 		"/bot/help": helpCommand,
-	},
+		"/swagger":  SwaggerHandler.defaultHandler,
+	}, SwaggerHandler.handlers),
 	defaultHandler: executeDefault,
+}
+
+func mergeMaps(maps ...map[string]HandlerFunc) map[string]HandlerFunc {
+	result := make(map[string]HandlerFunc)
+	for _, m := range maps {
+		for k, v := range m {
+			result[k] = v
+		}
+	}
+	return result
 }
 
 func GetCommands(pAPI PluginAPI) []*model.Command {
@@ -45,6 +56,13 @@ func GetCommands(pAPI PluginAPI) []*model.Command {
 		Description:      "명령어 목록: list, app, env, help",
 		AutoComplete:     true,
 		AutoCompleteDesc: "명령어 목록: list, app, env, help",
+		AutoCompleteHint: "[command]",
+	}, &model.Command{
+		Trigger:          "swagger",
+		DisplayName:      "Swagger",
+		Description:      "명령어 목록: list, \"<서비스코드>|<배포환경>\", help",
+		AutoComplete:     true,
+		AutoCompleteDesc: "명령어 목록: list, \"<서비스코드>|<배포환경>\", help",
 		AutoCompleteHint: "[command]",
 	}}
 }

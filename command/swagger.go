@@ -43,14 +43,22 @@ func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.Co
 		v := config.Swagger.D(strings.ToLower(args[0]))
 		links := v.D("links")
 
-		postCommandResponse(context,
-			fmt.Sprintf("#### %s(%s) 서비스의 swagger 목록 조회\n", v.S("name"), strings.ToUpper(args[0]))+
-				"| 배포 환경 | URL |\n"+
-				"| --- | --- |\n"+
-				fmt.Sprintf("| %s | %s |\n", "SI개발", links.S("sd"))+
-				fmt.Sprintf("| %s | %s |\n", "SI통시", links.S("st"))+
-				fmt.Sprintf("| %s | %s |\n", "SM개발", links.S("d"))+
-				fmt.Sprintf("| %s | %s |\n", "SM통시", links.S("t")))
+		message := fmt.Sprintf("#### %s(%s) 서비스의 swagger 목록 조회\n", v.S("name"), strings.ToUpper(args[0])) +
+			"| 배포 환경 | URL |\n" +
+			"| --- | --- |\n"
+		if val, ok := links["sd"]; ok {
+			message += fmt.Sprintf("| %s | %s |\n", "SI개발", val)
+		}
+		if val, ok := links["st"]; ok {
+			message += fmt.Sprintf("| %s | %s |\n", "SI통시", val)
+		}
+		if val, ok := links["d"]; ok {
+			message += fmt.Sprintf("| %s | %s |\n", "SM개발", val)
+		}
+		if val, ok := links["t"]; ok {
+			message += fmt.Sprintf("| %s | %s |\n", "SM통시", val)
+		}
+		postCommandResponse(context, message)
 		return &model.CommandResponse{}
 	}
 

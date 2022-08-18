@@ -26,8 +26,9 @@ var SwaggerHandler = Handler{
 }
 
 func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.CommandResponse {
-	codes := fn.Map(config.Swagger, func(key string, value interface{}) string {
-		return key
+	swagger := config.Swagger.A("swagger")
+	codes := fn.Map(swagger, func(d config.Dict) string {
+		return d.S("code")
 	}).([]string)
 	envs := []string{"d", "t", "sd", "st"}
 
@@ -40,7 +41,9 @@ func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.Co
 	}
 
 	if len(args) > 0 && fn.Contains(codes, strings.ToLower(args[0])) {
-		v := config.Swagger.D(strings.ToLower(args[0]))
+		v := fn.Find(swagger, func(d config.Dict) bool {
+			return d.S("code") == strings.ToLower(args[0])
+		}).(config.Dict)
 		links := v.D("links")
 
 		message := fmt.Sprintf("#### %s(%s) 서비스의 swagger 목록 조회\n", v.S("name"), strings.ToUpper(args[0])) +
@@ -75,9 +78,8 @@ func swaggerListCommand(context *model.CommandArgs, args ...string) *model.Comma
 	postCommandResponse(context,
 		"| 구분 | 파트 | 서비스명 | 서비스코드 |\n"+
 			"| --- | --- | --- | --- |\n"+
-			strings.Join(fn.Map(config.Swagger, func(key string, value interface{}) string {
-				v := value.(config.Dict)
-				return fmt.Sprintf("| %s | %s | %s | %s |", v.S("category"), v.S("part"), v.S("name"), strings.ToUpper(key))
+			strings.Join(fn.Map(config.Swagger.A("swagger"), func(d config.Dict) string {
+				return fmt.Sprintf("| %s | %s | %s | %s |", d.S("category"), d.S("part"), d.S("name"), strings.ToUpper(d.S("code")))
 			}).([]string), "\n"))
 	return &model.CommandResponse{}
 }

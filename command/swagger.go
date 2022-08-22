@@ -30,7 +30,7 @@ func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.Co
 	codes := fn.Map(swagger, func(d config.Dict) string {
 		return d.S("code")
 	}).([]string)
-	envs := []string{"d", "t", "sd", "st"}
+	envs := []string{"d", "t", "sd", "st", "e"}
 
 	if len(args) > 0 && fn.Contains(envs, strings.ToLower(args[0])) {
 		// d, t, sd, st
@@ -60,6 +60,9 @@ func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.Co
 		}
 		if val, ok := links["t"]; ok {
 			message += fmt.Sprintf("| %s | %s |\n", "SM통시", val)
+		}
+		if val, ok := links["e"]; ok {
+			message += fmt.Sprintf("| %s | %s |\n", "교육", val)
 		}
 		postCommandResponse(context, message)
 		return &model.CommandResponse{}

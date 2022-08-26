@@ -33,10 +33,25 @@ func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.Co
 	envs := []string{"d", "t", "sd", "st", "e"}
 
 	if len(args) > 0 && fn.Contains(envs, strings.ToLower(args[0])) {
-		// d, t, sd, st
-		// d, t, sd, st
-		// d, t, sd, st
-		// d, t, sd, st
+		list := fn.Filter(swagger, func(d config.Dict) bool {
+			_, ok := d.D("links")[args[0]]
+			return ok
+		}).([]config.Dict)
+		env := map[string]string{
+			"sd": "SI개발",
+			"st": "SI통시",
+			"d":  "SM개발",
+			"t":  "SM통시",
+			"e":  "교육",
+		}
+
+		postCommandResponse(context,
+			fmt.Sprintf("#### %s기 swagger 목록 조회\n", env[args[0]])+
+				"| 구분 | 파트 | 서비스명 | 서비스코드 | 링크 |\n"+
+				"| --- | --- | --- | --- | --- |\n"+
+				strings.Join(fn.Map(list, func(d config.Dict) string {
+					return fmt.Sprintf("| %s | %s | %s | %s | %s |", d.S("category"), d.S("part"), d.S("name"), strings.ToUpper(d.S("code")), d.D("links").S(args[0]))
+				}).([]string), "\n"))
 		return &model.CommandResponse{}
 	}
 

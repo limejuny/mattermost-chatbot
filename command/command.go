@@ -35,7 +35,8 @@ var CommandHandler = Handler{
 		"/bot/env":  envCommand,
 		"/bot/help": helpCommand,
 		"/swagger":  SwaggerHandler.defaultHandler,
-	}, SwaggerHandler.handlers),
+		"/app":      AppHandler.defaultHandler,
+	}, SwaggerHandler.handlers, AppHandler.handlers),
 	defaultHandler: executeDefault,
 }
 
@@ -60,6 +61,13 @@ func GetCommands(pAPI PluginAPI) []*model.Command {
 	}, &model.Command{
 		Trigger:          "swagger",
 		DisplayName:      "Swagger",
+		Description:      "명령어 목록: list, \"<서비스코드>|<배포환경>\", help",
+		AutoComplete:     true,
+		AutoCompleteDesc: "명령어 목록: list, \"<서비스코드>|<배포환경>\", help",
+		AutoCompleteHint: "[command]",
+	}, &model.Command{
+		Trigger:          "app",
+		DisplayName:      "App",
 		Description:      "명령어 목록: list, \"<서비스코드>|<배포환경>\", help",
 		AutoComplete:     true,
 		AutoCompleteDesc: "명령어 목록: list, \"<서비스코드>|<배포환경>\", help",

@@ -30,4 +30,5 @@ var (
 	Mattermost plugin.API
 	BotUserID  string
 	Swagger    Dict
+	App        Dict
 )

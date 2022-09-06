@@ -57,8 +57,13 @@ func (p *Plugin) OnConfigurationChange() error {
 	if err != nil {
 		return err
 	}
-
 	yaml.Unmarshal(swaggerFile, &config.Swagger)
+
+	appFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app.yaml"))
+	if err != nil {
+		return err
+	}
+	yaml.Unmarshal(appFile, &config.App)
 
 	return nil
 }

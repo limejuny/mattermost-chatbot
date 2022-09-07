@@ -29,6 +29,12 @@ func (d Dict) A(k string) []Dict {
 var (
 	Mattermost plugin.API
 	BotUserID  string
+	Service    Dict
 	Swagger    Dict
-	App        Dict
+	AppP       Dict
+	AppSD      Dict
+	AppST      Dict
+	AppD       Dict
+	AppT       Dict
+	AppE       Dict
 )

@@ -53,17 +53,54 @@ func (p *Plugin) OnConfigurationChange() error {
 		return err
 	}
 
+	serviceFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "msa.yaml"))
+	if err != nil {
+		return err
+	}
+	yaml.Unmarshal(serviceFile, &config.Service)
+
 	swaggerFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "swagger.yaml"))
 	if err != nil {
 		return err
 	}
 	yaml.Unmarshal(swaggerFile, &config.Swagger)
 
-	appFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app.yaml"))
+	// 운영
+	appPFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-p.yaml"))
 	if err != nil {
 		return err
 	}
-	yaml.Unmarshal(appFile, &config.App)
+	yaml.Unmarshal(appPFile, &config.AppP)
+	// SI개발
+	appSDFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-sd.yaml"))
+	if err != nil {
+		return err
+	}
+	yaml.Unmarshal(appSDFile, &config.AppSD)
+	// SI통시
+	appSTFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-st.yaml"))
+	if err != nil {
+		return err
+	}
+	yaml.Unmarshal(appSTFile, &config.AppST)
+	// SM개발
+	appDFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-d.yaml"))
+	if err != nil {
+		return err
+	}
+	yaml.Unmarshal(appDFile, &config.AppD)
+	// SM통시
+	appTFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-t.yaml"))
+	if err != nil {
+		return err
+	}
+	yaml.Unmarshal(appTFile, &config.AppT)
+	// 교육
+	appEFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-e.yaml"))
+	if err != nil {
+		return err
+	}
+	yaml.Unmarshal(appEFile, &config.AppE)
 
 	return nil
 }

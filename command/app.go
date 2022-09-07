@@ -25,11 +25,13 @@ var AppHandler = Handler{
 	defaultHandler: executeAppDefault,
 }
 
-func postEnvAppList(context *model.CommandArgs, appDict config.Dict, env string, args ...string) {
-	app := appDict.A("app")
-	v := fn.Find(app, func(d config.Dict) bool {
+func postEnvAppList(context *model.CommandArgs, app []config.Dict, env string, args ...string) {
+	v, ok := fn.Find(app, func(d config.Dict) bool {
 		return d.S("code") == strings.ToLower(args[0])
 	}).(config.Dict)
+	if !ok || v == nil || v["links"] == nil {
+		return
+	}
 	links := v.A("links")
 
 	message := fmt.Sprintf("### %s(%s) 서비스 관련 사이트 목록 조회 (%s)\n\n", v.S("name"), strings.ToUpper(args[0]), env)
@@ -58,12 +60,12 @@ func executeAppDefault(context *model.CommandArgs, args ...string) *model.Comman
 	}
 
 	if len(args) > 0 && fn.Contains(codes, strings.ToLower(args[0])) {
-		postEnvAppList(context, config.AppP, "운영", args...)
-		postEnvAppList(context, config.AppSD, "SI개발", args...)
-		postEnvAppList(context, config.AppST, "SI통시", args...)
-		postEnvAppList(context, config.AppD, "SM개발", args...)
-		postEnvAppList(context, config.AppT, "SM통시", args...)
-		postEnvAppList(context, config.AppE, "교육", args...)
+		postEnvAppList(context, config.AppP.A("app"), "운영", args...)
+		postEnvAppList(context, config.AppSD.A("app"), "SI개발", args...)
+		postEnvAppList(context, config.AppST.A("app"), "SI통시", args...)
+		postEnvAppList(context, config.AppD.A("app"), "SM개발", args...)
+		postEnvAppList(context, config.AppT.A("app"), "SM통시", args...)
+		postEnvAppList(context, config.AppE.A("app"), "교육", args...)
 		return &model.CommandResponse{}
 	}
 

@@ -60,12 +60,29 @@ func executeAppDefault(context *model.CommandArgs, args ...string) *model.Comman
 	}
 
 	if len(args) > 0 && fn.Contains(codes, strings.ToLower(args[0])) {
-		postEnvAppList(context, config.AppP.A("app"), "운영", args...)
-		postEnvAppList(context, config.AppSD.A("app"), "SI개발", args...)
-		postEnvAppList(context, config.AppST.A("app"), "SI통시", args...)
-		postEnvAppList(context, config.AppD.A("app"), "SM개발", args...)
-		postEnvAppList(context, config.AppT.A("app"), "SM통시", args...)
-		postEnvAppList(context, config.AppE.A("app"), "교육", args...)
+		if len(args) > 1 && fn.Contains(envs, strings.ToLower(args[1])) {
+			switch strings.ToLower(args[1]) {
+			case "p":
+				postEnvAppList(context, config.AppP.A("app"), "운영", args...)
+			case "sd":
+				postEnvAppList(context, config.AppSD.A("app"), "SI개발", args...)
+			case "st":
+				postEnvAppList(context, config.AppST.A("app"), "SI통시", args...)
+			case "d":
+				postEnvAppList(context, config.AppD.A("app"), "SM개발", args...)
+			case "t":
+				postEnvAppList(context, config.AppT.A("app"), "SM통시", args...)
+			case "e":
+				postEnvAppList(context, config.AppE.A("app"), "교육", args...)
+			}
+		} else {
+			postEnvAppList(context, config.AppP.A("app"), "운영", args...)
+			postEnvAppList(context, config.AppSD.A("app"), "SI개발", args...)
+			postEnvAppList(context, config.AppST.A("app"), "SI통시", args...)
+			postEnvAppList(context, config.AppD.A("app"), "SM개발", args...)
+			postEnvAppList(context, config.AppT.A("app"), "SM통시", args...)
+			postEnvAppList(context, config.AppE.A("app"), "교육", args...)
+		}
 		return &model.CommandResponse{}
 	}
 

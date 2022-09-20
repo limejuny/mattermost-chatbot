@@ -2,7 +2,7 @@
   "id": "com.github.eggmoid.mattermost-chatbot",
   "name": "Mattermost Chatbot",
   "icon_path": "assets/icon.svg",
-  "version": "0.0.1.220826",
+  "version": "0.0.1",
   "server": {
     "executable": "plugin"
   }

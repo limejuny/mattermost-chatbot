@@ -48,7 +48,7 @@ func postEnvAppList(context *model.CommandArgs, app []config.Dict, env string, a
 }
 
 func executeAppDefault(context *model.CommandArgs, args ...string) *model.CommandResponse {
-	svc := config.Service.A("app")
+	svc := append(config.Service.D("app").A("public"), config.Service.D("app").A("private")...)
 	codes := fn.Map(svc, func(d config.Dict) string {
 		return d.S("code")
 	}).([]string)
@@ -97,11 +97,20 @@ func executeAppDefault(context *model.CommandArgs, args ...string) *model.Comman
 
 func appListCommand(context *model.CommandArgs, args ...string) *model.CommandResponse {
 	postCommandResponse(context,
-		"| 구분 | 파트 | 서비스명 | 서비스코드 |\n"+
-			"| --- | --- | --- | --- |\n"+
-			strings.Join(fn.Map(config.Service.A("app"), func(d config.Dict) string {
-				return fmt.Sprintf("| %s | %s | %s | %s |", d.S("category"), d.S("part"), d.S("name"), strings.ToUpper(d.S("code")))
+		"### Public 클라우드(AWS)\n\n"+
+			"| 서비스명 | 서비스코드 |\n"+
+			"| --- | --- |\n"+
+			strings.Join(fn.Map(config.Service.D("app").A("public"), func(d config.Dict) string {
+				return fmt.Sprintf("| %s | %s |", d.S("name"), strings.ToUpper(d.S("code")))
 			}).([]string), "\n"))
+	postCommandResponse(context,
+		"### Private 클라우드(Openshift, VMWare)\n\n"+
+			"| 서비스명 | 서비스코드 |\n"+
+			"| --- | --- |\n"+
+			strings.Join(fn.Map(config.Service.D("app").A("private"), func(d config.Dict) string {
+				return fmt.Sprintf("| %s | %s |", d.S("name"), strings.ToUpper(d.S("code")))
+			}).([]string), "\n")+
+			"\n| 컨피그서버 | NUPF-CNF |")
 	return &model.CommandResponse{}
 }
 

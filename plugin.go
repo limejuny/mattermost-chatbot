@@ -4,9 +4,9 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/eggmoid/mattermost-chatbot/command"
-	"github.com/eggmoid/mattermost-chatbot/config"
-	"github.com/eggmoid/mattermost-chatbot/util"
+	"github.com/limejuny/mattermost-chatbot/command"
+	"github.com/limejuny/mattermost-chatbot/config"
+	"github.com/limejuny/mattermost-chatbot/util"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 	"github.com/pkg/errors"

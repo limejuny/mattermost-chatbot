@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/eggmoid/mattermost-chatbot/config"
+	"github.com/limejuny/mattermost-chatbot/config"
 	"github.com/mattermost/mattermost-server/v5/model"
 	fn "github.com/thoas/go-funk"
 )

@@ -1,4 +1,4 @@
-module github.com/eggmoid/mattermost-chatbot
+module github.com/limejuny/mattermost-chatbot
 
 go 1.18
 

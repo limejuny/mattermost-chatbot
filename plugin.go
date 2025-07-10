@@ -106,7 +106,7 @@ func (p *Plugin) OnConfigurationChange() error {
 }
 
 func (p *Plugin) setUpBotUser() error {
-	botUserID, err := p.Helpers.EnsureBot(&model.Bot{
+	botUserID, err := p.API.EnsureBotUser(&model.Bot{
 		Username:    botUserName,
 		DisplayName: botDisplayName,
 		Description: botDescription,

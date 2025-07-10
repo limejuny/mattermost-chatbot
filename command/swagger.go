@@ -87,7 +87,7 @@ func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.Co
 	out += swaggerHelpText
 
 	return &model.CommandResponse{
-		ResponseType: model.COMMAND_RESPONSE_TYPE_EPHEMERAL,
+		ResponseType: model.CommandResponseTypeEphemeral,
 		Text:         out,
 	}
 }

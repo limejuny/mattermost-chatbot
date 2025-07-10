@@ -90,7 +90,7 @@ func executeAppDefault(context *model.CommandArgs, args ...string) *model.Comman
 	out += appHelpText
 
 	return &model.CommandResponse{
-		ResponseType: model.COMMAND_RESPONSE_TYPE_EPHEMERAL,
+		ResponseType: model.CommandResponseTypeEphemeral,
 		Text:         out,
 	}
 }

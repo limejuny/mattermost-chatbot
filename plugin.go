@@ -138,7 +138,7 @@ func (p *Plugin) ExecuteCommand(context *plugin.Context, commandArgs *model.Comm
 	args, argErr := util.SplitArgs(commandArgs.Command)
 	if argErr != nil {
 		return &model.CommandResponse{
-			ResponseType: model.COMMAND_RESPONSE_TYPE_EPHEMERAL,
+			ResponseType: model.CommandResponseTypeEphemeral,
 			Text:         argErr.Error(),
 		}, nil
 	}

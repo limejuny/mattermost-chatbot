@@ -6,7 +6,7 @@ import (
 
 	"github.com/limejuny/mattermost-chatbot/config"
 	"github.com/mattermost/mattermost/server/public/model"
-	fn "github.com/thoas/go-funk"
+	"github.com/samber/lo"
 )
 
 const (
@@ -27,16 +27,16 @@ var SwaggerHandler = Handler{
 
 func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.CommandResponse {
 	swagger := config.Swagger.A("swagger")
-	codes := fn.Map(swagger, func(d config.Dict) string {
+	codes := lo.Map(swagger, func(d config.Dict, _ int) string {
 		return d.S("code")
-	}).([]string)
+	})
 	envs := []string{"d", "t", "sd", "st", "e"}
 
-	if len(args) > 0 && fn.Contains(envs, strings.ToLower(args[0])) {
-		list := fn.Filter(swagger, func(d config.Dict) bool {
+	if len(args) > 0 && lo.Contains(envs, strings.ToLower(args[0])) {
+		list := lo.Filter(swagger, func(d config.Dict, _ int) bool {
 			_, ok := d.D("links")[args[0]]
 			return ok
-		}).([]config.Dict)
+		})
 		env := map[string]string{
 			"sd": "SI개발",
 			"st": "SI통시",
@@ -49,16 +49,16 @@ func executeSwaggerDefault(context *model.CommandArgs, args ...string) *model.Co
 			fmt.Sprintf("#### %s기 swagger 목록 조회\n", env[args[0]])+
 				"| 구분 | 파트 | 서비스명 | 서비스코드 | 링크 |\n"+
 				"| --- | --- | --- | --- | --- |\n"+
-				strings.Join(fn.Map(list, func(d config.Dict) string {
+				strings.Join(lo.Map(list, func(d config.Dict, _ int) string {
 					return fmt.Sprintf("| %s | %s | %s | %s | %s |", d.S("category"), d.S("part"), d.S("name"), strings.ToUpper(d.S("code")), d.D("links").S(args[0]))
-				}).([]string), "\n"))
+				}), "\n"))
 		return &model.CommandResponse{}
 	}
 
-	if len(args) > 0 && fn.Contains(codes, strings.ToLower(args[0])) {
-		v := fn.Find(swagger, func(d config.Dict) bool {
+	if len(args) > 0 && lo.Contains(codes, strings.ToLower(args[0])) {
+		v, _ := lo.Find(swagger, func(d config.Dict) bool {
 			return d.S("code") == strings.ToLower(args[0])
-		}).(config.Dict)
+		})
 		links := v.D("links")
 
 		message := fmt.Sprintf("#### %s(%s) 서비스의 swagger 목록 조회\n", v.S("name"), strings.ToUpper(args[0])) +
@@ -96,9 +96,9 @@ func swaggerListCommand(context *model.CommandArgs, args ...string) *model.Comma
 	postCommandResponse(context,
 		"| 구분 | 파트 | 서비스명 | 서비스코드 |\n"+
 			"| --- | --- | --- | --- |\n"+
-			strings.Join(fn.Map(config.Swagger.A("swagger"), func(d config.Dict) string {
+			strings.Join(lo.Map(config.Swagger.A("swagger"), func(d config.Dict, _ int) string {
 				return fmt.Sprintf("| %s | %s | %s | %s |", d.S("category"), d.S("part"), d.S("name"), strings.ToUpper(d.S("code")))
-			}).([]string), "\n"))
+			}), "\n"))
 	return &model.CommandResponse{}
 }
 

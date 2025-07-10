@@ -2,8 +2,7 @@ package config
 
 import (
 	"github.com/mattermost/mattermost/server/public/plugin"
-
-	fn "github.com/thoas/go-funk"
+	"github.com/samber/lo"
 )
 
 type Dict map[string]interface{}
@@ -21,9 +20,9 @@ func (d Dict) I(k string) int {
 }
 
 func (d Dict) A(k string) []Dict {
-	return fn.Map(d[k].([]interface{}), func(v interface{}) Dict {
+	return lo.Map(d[k].([]interface{}), func(v interface{}, _ int) Dict {
 		return v.(Dict)
-	}).([]Dict)
+	})
 }
 
 var (

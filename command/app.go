@@ -6,7 +6,7 @@ import (
 
 	"github.com/limejuny/mattermost-chatbot/config"
 	"github.com/mattermost/mattermost/server/public/model"
-	fn "github.com/thoas/go-funk"
+	"github.com/samber/lo"
 )
 
 const (
@@ -26,9 +26,9 @@ var AppHandler = Handler{
 }
 
 func postEnvAppList(context *model.CommandArgs, app []config.Dict, env string, args ...string) {
-	v, ok := fn.Find(app, func(d config.Dict) bool {
+	v, ok := lo.Find(app, func(d config.Dict) bool {
 		return d.S("code") == strings.ToLower(args[0])
-	}).(config.Dict)
+	})
 	if !ok || v == nil || v["links"] == nil {
 		return
 	}
@@ -49,18 +49,18 @@ func postEnvAppList(context *model.CommandArgs, app []config.Dict, env string, a
 
 func executeAppDefault(context *model.CommandArgs, args ...string) *model.CommandResponse {
 	svc := append(config.Service.D("app").A("public"), config.Service.D("app").A("private")...)
-	codes := fn.Map(svc, func(d config.Dict) string {
+	codes := lo.Map(svc, func(d config.Dict, _ int) string {
 		return d.S("code")
-	}).([]string)
+	})
 	envs := []string{"d", "t", "sd", "st", "e"}
 
-	if len(args) > 0 && fn.Contains(envs, strings.ToLower(args[0])) {
+	if len(args) > 0 && lo.Contains(envs, strings.ToLower(args[0])) {
 		// TODO: 개발환경별 app 목록 조회
 		return &model.CommandResponse{}
 	}
 
-	if len(args) > 0 && fn.Contains(codes, strings.ToLower(args[0])) {
-		if len(args) > 1 && fn.Contains(envs, strings.ToLower(args[1])) {
+	if len(args) > 0 && lo.Contains(codes, strings.ToLower(args[0])) {
+		if len(args) > 1 && lo.Contains(envs, strings.ToLower(args[1])) {
 			switch strings.ToLower(args[1]) {
 			case "p":
 				postEnvAppList(context, config.AppP.A("app"), "운영", args...)
@@ -100,16 +100,16 @@ func appListCommand(context *model.CommandArgs, args ...string) *model.CommandRe
 		"### Public 클라우드(AWS)\n\n"+
 			"| 서비스명 | 서비스코드 |\n"+
 			"| --- | --- |\n"+
-			strings.Join(fn.Map(config.Service.D("app").A("public"), func(d config.Dict) string {
+			strings.Join(lo.Map(config.Service.D("app").A("public"), func(d config.Dict, _ int) string {
 				return fmt.Sprintf("| %s | %s |", d.S("name"), strings.ToUpper(d.S("code")))
-			}).([]string), "\n"))
+			}), "\n"))
 	postCommandResponse(context,
 		"### Private 클라우드(Openshift, VMWare)\n\n"+
 			"| 서비스명 | 서비스코드 |\n"+
 			"| --- | --- |\n"+
-			strings.Join(fn.Map(config.Service.D("app").A("private"), func(d config.Dict) string {
+			strings.Join(lo.Map(config.Service.D("app").A("private"), func(d config.Dict, _ int) string {
 				return fmt.Sprintf("| %s | %s |", d.S("name"), strings.ToUpper(d.S("code")))
-			}).([]string), "\n")+
+			}), "\n")+
 			"\n| 컨피그서버 | NUPF-CNF |")
 	return &model.CommandResponse{}
 }

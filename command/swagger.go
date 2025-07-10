@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/limejuny/mattermost-chatbot/config"
-	"github.com/mattermost/mattermost-server/v5/model"
+	"github.com/mattermost/mattermost/server/public/model"
 	fn "github.com/thoas/go-funk"
 )
 

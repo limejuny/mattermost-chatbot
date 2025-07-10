@@ -1,14 +1,14 @@
 package main
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/limejuny/mattermost-chatbot/command"
 	"github.com/limejuny/mattermost-chatbot/config"
 	"github.com/limejuny/mattermost-chatbot/util"
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/plugin"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
@@ -53,50 +53,50 @@ func (p *Plugin) OnConfigurationChange() error {
 		return err
 	}
 
-	serviceFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "msa.yaml"))
+	serviceFile, err := os.ReadFile(filepath.Join(bundlePath, "site", "msa.yaml"))
 	if err != nil {
 		return err
 	}
 	yaml.Unmarshal(serviceFile, &config.Service)
 
-	swaggerFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "swagger.yaml"))
+	swaggerFile, err := os.ReadFile(filepath.Join(bundlePath, "site", "swagger.yaml"))
 	if err != nil {
 		return err
 	}
 	yaml.Unmarshal(swaggerFile, &config.Swagger)
 
 	// 운영
-	appPFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-p.yaml"))
+	appPFile, err := os.ReadFile(filepath.Join(bundlePath, "site", "app-p.yaml"))
 	if err != nil {
 		return err
 	}
 	yaml.Unmarshal(appPFile, &config.AppP)
 	// SI개발
-	appSDFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-sd.yaml"))
+	appSDFile, err := os.ReadFile(filepath.Join(bundlePath, "site", "app-sd.yaml"))
 	if err != nil {
 		return err
 	}
 	yaml.Unmarshal(appSDFile, &config.AppSD)
 	// SI통시
-	appSTFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-st.yaml"))
+	appSTFile, err := os.ReadFile(filepath.Join(bundlePath, "site", "app-st.yaml"))
 	if err != nil {
 		return err
 	}
 	yaml.Unmarshal(appSTFile, &config.AppST)
 	// SM개발
-	appDFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-d.yaml"))
+	appDFile, err := os.ReadFile(filepath.Join(bundlePath, "site", "app-d.yaml"))
 	if err != nil {
 		return err
 	}
 	yaml.Unmarshal(appDFile, &config.AppD)
 	// SM통시
-	appTFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-t.yaml"))
+	appTFile, err := os.ReadFile(filepath.Join(bundlePath, "site", "app-t.yaml"))
 	if err != nil {
 		return err
 	}
 	yaml.Unmarshal(appTFile, &config.AppT)
 	// 교육
-	appEFile, err := ioutil.ReadFile(filepath.Join(bundlePath, "site", "app-e.yaml"))
+	appEFile, err := os.ReadFile(filepath.Join(bundlePath, "site", "app-e.yaml"))
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func (p *Plugin) setUpBotUser() error {
 		return err
 	}
 
-	profileImage, err := ioutil.ReadFile(filepath.Join(bundlePath, "assets", "icon.png"))
+	profileImage, err := os.ReadFile(filepath.Join(bundlePath, "assets", "icon.png"))
 	if err != nil {
 		return err
 	}
